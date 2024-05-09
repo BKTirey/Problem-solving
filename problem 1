@@ -1,0 +1,23 @@
+words = [
+    'apple', 'banana', 'orange', 'pear', 'grape',
+    'kiwi', 'melon', 'pineapple', 'peach', 'plum',
+    'mango', 'cherry', 'apple', 'banana', 'orange',
+    'pear', 'grape', 'cherry', 'apple', 'banana',
+    'orange','peach', 'plum','mango', 'grape',
+    'apple','melon','banana','pear','grape']
+
+running_dict = {}
+
+for i in words:
+  running_dict[i] = running_dict.get(i, 0) +1
+print(f'{running_dict}\n')
+
+high_freq = {}
+estimate_freq = 4
+
+for key, values in running_dict.items(): 
+  #print(key,values)
+  if values >= estimate_freq:
+    high_freq[key] = values
+Max = list(high_freq.keys())
+print(f'{Max}\n')
