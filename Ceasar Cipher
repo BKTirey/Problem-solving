@@ -1,0 +1,33 @@
+# Ttechedit's Ceasar Cipher Class Solution 
+
+class ceasar_cipher():
+  def __init__(self):
+    self.Alphabet=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z', 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+    self.key = 3
+    self.encryption_list = []
+
+
+  def encrypt(self, message):
+    for letter in message:
+      if letter in self.Alphabet:
+        encrypted = (self.Alphabet.index(letter)+self.key) % len(self.Alphabet)
+        self.encryption_list.append(self.Alphabet[encrypted])
+        #print(f"letter ={letter}\nIndex location ={self.Alphabet.index(letter)}\nencrypted letter index ={self.Alphabet.index(letter)+3}\nencryped message = {self.Alphabet[encrypted]}\nlist = {encryption_list}")
+      else:
+        self.encryption_list.append(letter)
+
+    encrypted_message = ''.join(self.encryption_list)
+    self.encryption_list=[]
+    return encrypted_message
+
+  def decryption(self, message):
+    for letter in message:
+      if letter in self.Alphabet: 
+        deencrypt = (self.Alphabet.index(letter)-self.key) % len(self.Alphabet)
+        self.encryption_list.append(self.Alphabet[deencrypt])
+      else:
+        self.encryption_list.append(letter)
+
+    encrypted_ttechmessage = ''.join(self.encryption_list)
+    self.encryption_list=[]
+    return encrypted_ttechmessage
