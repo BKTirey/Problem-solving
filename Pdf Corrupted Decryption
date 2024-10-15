@@ -1,0 +1,74 @@
+# !pip install PyPDF2
+# !pip install PyMuPDF
+# !pip install matplotlib
+
+import PyPDF2
+import fitz
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import random
+
+def corrupt_pdf(input_path, output_path):
+    with open(input_path, 'rb') as input_file:
+        pdf_data = bytearray(input_file.read())
+
+        # Introduce random noise by replacing some bytes with random values
+        for _ in range(100):  # Introduce noise 100 times
+            position = random.randint(0, len(pdf_data) - 1)
+            pdf_data[position] = random.randint(0, 255)  # Replace with a random byte
+
+        with open(output_path, 'wb') as output_file:
+            output_file.write(pdf_data)
+
+def decrypt_pdf(input_path, output_path, password=None):
+    with open(input_path, 'rb') as input_file:
+        reader = PyPDF2.PdfReader(input_file)
+
+        if reader.is_encrypted:
+            if password:
+                reader.decrypt(password)
+            else:
+                print("PDF is encrypted. Provide password.")
+                return False
+
+        writer = PyPDF2.PdfWriter()
+
+        for page_num in range(len(reader.pages)):
+            page = reader.pages[page_num]
+            writer.add_page(page)
+
+        with open(output_path, 'wb') as output_file:
+            writer.write(output_file)
+
+    return True
+
+def display_pdf(pdf_path):
+    pdf_document = fitz.open(pdf_path)
+    for page_number in range(len(pdf_document)):
+        page = pdf_document.load_page(page_number)
+        pix = page.get_pixmap()
+        img_bytes = pix.samples
+        img_width = pix.width
+        img_height = pix.height
+        img_array = np.frombuffer(img_bytes, dtype=np.uint8).reshape(img_height, img_width, 3)
+        plt.figure(figsize=(img_width / 100, img_height / 100), dpi=100)
+        plt.imshow(img_array)
+        plt.axis('off')
+        plt.show()
+
+input_path = r'C:\Users\TEST.pdf'
+output_path_corrupted = r'C:\Users\Corrupted\corrupted.pdf'
+output_path_decrypted = r'C:\Users\Decrypted\decrypted.pdf'
+
+# Corrupt PDF
+corrupt_pdf(input_path, output_path_corrupted)
+
+# Decrypt the corrupted PDF
+decrypt_pdf(output_path_corrupted, output_path_decrypted)
+
+# Display both PDFs
+# print("Displaying Corrupted PDF:")
+# display_pdf(output_path_corrupted)
+print("Displaying Decrypted PDF:")
+display_pdf(output_path_decrypted)
