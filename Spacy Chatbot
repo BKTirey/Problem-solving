@@ -1,0 +1,35 @@
+# basic chatbot with controlled responses
+
+import spacy
+
+# Load spaCy NLP model
+nlp = spacy.load('en_core_web_sm')
+
+# Process user input
+def process_input(input_text):
+    doc = nlp(input_text)
+    intent = doc[0].lemma_  # Extract intent from the first token
+    entities = [ent.text for ent in doc.ents]  # Extract entities
+    return intent, entities
+
+# Define intents and responses (mock data)
+intent_responses = {
+    'quit': 'Good Bye, Hope I helped!',
+    'hello': "Hello! How can I assist you today?",
+    'greet': "Hello! How can I assist you today?",
+    'recommendation': "Based on your preferences, I recommend...",
+    # Add more intents and responses
+}
+
+# Main function to handle user interaction
+def chatbot(input_text):
+    intent, entities = process_input(input_text)
+    if intent in intent_responses:
+        return intent_responses[intent]
+    else:
+        return "I'm sorry, I didn't understand that."
+
+# Example usage
+user_input = input("User: ")
+response = chatbot(user_input)
+print("AI: " + response)
